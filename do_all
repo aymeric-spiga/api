@@ -1,0 +1,68 @@
+#! /bin/bash
+
+\rm logfile
+\rm *zabg*
+
+#
+# COMPILE
+#
+comp_w2g > logfile 2> logfile
+comp_iowrf > logfile 2> logfile
+comp_api > logfile 2> logfile
+
+#
+# VERTICAL INTERPOLATION -- modify namelist.api
+#
+api > logfile
+
+# FILES COMPLIANT w/ ALL FILESYSTEMS
+#
+ls *_zabg *_p *_z > ye 2> /dev/null
+for fich in $(cat ye) ; do
+  mv $fich $(echo $fich | tr ":" "_") 2> /dev/null
+done
+\rm ye
+
+#
+# GRADS .ctl FILE
+#
+ls *_zabg *_p *_z > ye 2> /dev/null
+for fich in $(cat ye) ; do
+  w2g -i $fich -o $fich > logfile
+done
+\rm ye
+
+#
+# SELECT GRID POINTS
+#
+ls *_zabg *_p *_z > ye 2> /dev/null
+for fich in $(cat ye) ; do
+  #iowrf $fich -box x 50 150 y 50 150 > logfile    ### MODIFIER ICI LA BOX 
+  iowrf $fich -box x 36 108 y 36 108 > logfile
+  #iowrf $fich -box x 5 84 y 5 84 > logfile
+done
+\rm ye
+
+#
+# SELECT LOCAL TIMES
+#
+ls *_zabg-box *_p-box *_z-box > ye 2> /dev/null
+for fich in $(cat ye) ; do
+  #ncrcat -d Time,0,11,1 $fich $fich'-lt'
+  #ncrcat -d Time,8,19,1 $fich $fich'-lt'
+  #ncrcat -d Time,0,7,1 $fich $fich'-lt'  ## nocturne
+  ncrcat -d Time,0,23,1 $fich $fich'-lt'  ## jour complet
+done
+\rm ye
+
+#
+# GRADS .ctl FILE
+#
+ls *_zabg-box* *_p-box* *_z-box* > ye 2> /dev/null
+for fich in $(cat ye) ; do
+  w2g -i $fich -o $fich > logfile
+done
+\rm ye
+
+echo 'END END END' > logfile
+xeyes &

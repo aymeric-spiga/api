@@ -1,0 +1,16 @@
+&io
+! path_to_input  = '/tmp15/aslmd/polar_61pts/'
+! path_to_output = '/tmp15/aslmd/polar_61pts/'
+ path_to_input = '/d5/aslmd/LMD_MM_MARS_SIMUS/polar_61pts/'
+ path_to_output = '/d5/aslmd/LMD_MM_MARS_SIMUS/polar_61pts/'
+ input_name     = 'wrfout_d01_2024-03-04_06:00:00'
+ oldvar         = T
+ process        = 'list'         
+ fields         = 'HGT,uvmet,tk,HFX,USTM'  
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 4                 
+ interp_levels = 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 20.
+/

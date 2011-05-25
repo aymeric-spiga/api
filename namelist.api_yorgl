@@ -1,0 +1,19 @@
+&io
+ path_to_input  = '/tmp7/aslmd/'
+ input_name     = 'wrfout_d01_2024-04-27_06:00:00'
+ path_to_input  = '/d5/aslmd/WRF_Mars/EN_COURS/OMG_cstTI/'
+ path_to_output = '/d5/aslmd/WRF_Mars/EN_COURS/OMG_cstTI/'
+ input_name     = 'wrfout_d03_2024-01-51_06z00z00'
+ oldvar         = T
+ process        = 'list'    !! list fields required in "fields" (available tk, tpot, GHT)     
+ fields         = 'uvmet,HGT,USTM,TSURF'  
+ fields         = 'uvmet,HGT,HFX,TSURF' 
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 3                 !! INTERPOLATION: ALTITUDE ABOVE MOLA AREOID (km)
+ interp_method = 4		   !! INTERPOLATION: ALTITUDE ABOVE SURFACE (km)
+ interp_levels = 0.01
+ unstagger_grid = .TRUE.           !! TO PUT regular U and V in uvmet
+/

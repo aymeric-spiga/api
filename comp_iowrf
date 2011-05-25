@@ -1,0 +1,6 @@
+#! /bin/bash
+
+### iowrf wrfout_d01_2024-03-20_06:00:00 -box x 50 150 y 50 150
+
+pgf90 iowrf.f -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include  -Mfree  -o iowrf
+

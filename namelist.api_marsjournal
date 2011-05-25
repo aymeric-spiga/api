@@ -1,0 +1,14 @@
+&io
+ path_to_input  = './liens/marsjournal/month4/'
+ input_name     = 'wrfout_d01_2024-04-01_06:00:00'
+ oldvar         = T
+ process        = 'list'    !! list fields required in "fields" (available tk, tpot, GHT)     
+ fields         = 'uvmet,HGT,USTM'  
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 3                 !! INTERPOLATION: ALTITUDE ABOVE MOLA AREOID (km)
+ interp_method = 4		   !! INTERPOLATION: ALTITUDE ABOVE SURFACE (km)
+ interp_levels = 0.01
+/

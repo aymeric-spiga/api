@@ -1,0 +1,52 @@
+#! /bin/bash
+
+#
+# NETCDF should be defined
+#
+
+pgf90 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Mfree -o api
+
+
+#g95 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -fno-second-underscore -ffree-form -o api
+#g95 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -ffree-form -o api
+#pgf90 -mcmodel=medium -Mlarge_arrays api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Mfree -o p_interp
+#ifort api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -o api
+
+
+
+#!=================================Make Executable============================
+#!  Make executable:
+#!    DEC Alpha
+#!      f90 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf/include  -free  -o p_interp
+#!
+#!   Linux flags
+#!      pgf90 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf/include  -Mfree  -o p_interp
+#!
+#!   Sun flags
+#!      f90 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf/include  -free  -o p_interp
+#!
+#!   SGI flags
+#!      f90 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf/include  -freeform  -o p_interp
+#!
+#!   IBM flags 
+#!      xlf p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf/include  -qfree=f90  -o p_interp
+#!
+#!   Mac flags (with xlf compiler)
+#!      xlf p_interp.F90 -L/usr/local/netcdf-xlf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf-xlf/include  -qfree=f90  -o p_interp
+#!
+#!   Mac flags (with g95 compiler)
+#!       g95 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!       -I/usr/local/netcdf/include -ffree-form -o p_interp
+#!
+#!   Mac flags (with pgf90 compiler)
+#!      pgf90 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+#!      -I/usr/local/netcdf/include  -Mfree  -o p_interp
+#!
+#!============================================================================
+

@@ -1,0 +1,15 @@
+&io
+ path_to_input  = '/tmp7/aslmd/results/'
+ input_name     = 'wrfout_d01_2024-07-02*'
+ oldvar         = T
+ path_to_output = '/tmp7/aslmd/results/'
+ process        = 'list'         
+ fields         = 'tk,W,HGT,SWDOWNZ,uvmet'  
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 3                 !! INTERPOLATION: ALTITUDE ABOVE MOLA AREOID (km)
+! interp_method = 4		   !! INTERPOLATION: ALTITUDE ABOVE SURFACE (km)
+ interp_levels = 10.,20.,30.,40.
+/

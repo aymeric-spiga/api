@@ -1,0 +1,17 @@
+&io
+ path_to_input  = '/tmp7/aslmd/MERIDIANI_BOMB/'
+ input_name     = 'wrfout_d01_2024-09-07_06:00:00'
+ oldvar         = T
+ process        = 'list'    !! list fields required in "fields" (available tk, tpot, GHT)     
+ fields         = 'HGT,TSURF,tk,uvmet,W'  
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 3                 !! INTERPOLATION: ALTITUDE ABOVE MOLA AREOID (km)
+! interp_method = 4		   !! INTERPOLATION: ALTITUDE ABOVE SURFACE (km)
+ interp_levels = 2., 4., 6., 8., 10., 
+                12.,14.,16.,18., 20.,
+                22.,24.,26.,28., 30.,
+! unstagger_grid = .TRUE.           !! TO PUT regular U and V in uvmet
+/

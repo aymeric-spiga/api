@@ -1,0 +1,15 @@
+&io
+ path_to_input  = '/tmp7/aslmd/TH20WC_month5/'
+ input_name     = 'wrfout_d01_2024-05-04_06:00:00'
+ oldvar         = T
+ process        = 'list'    !! list fields required in "fields" (available tk, tpot, GHT)     
+ fields         = 'HGT,RICE,TSURF,QH2O_ICE,QH2O,TAU_DUST,tk'  
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 3                 !! INTERPOLATION: ALTITUDE ABOVE MOLA AREOID (km)
+! interp_method = 4		   !! INTERPOLATION: ALTITUDE ABOVE SURFACE (km)
+ interp_levels = 20.
+! unstagger_grid = .TRUE.           !! TO PUT regular U and V in uvmet
+/
