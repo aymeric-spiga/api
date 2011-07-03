@@ -34,6 +34,70 @@
       IMPLICIT NONE
       INCLUDE 'netcdf.inc'
 
+      !
+      ! VARIABLES
+      !
+      CHARACTER (LEN=500)                                :: path_to_input
+      CHARACTER (LEN=500)                                :: path_to_output
+      CHARACTER (LEN=500)                                :: input_name
+      CHARACTER (LEN=500)                                :: output_name
+      CHARACTER (LEN=20)                                 :: process
+      CHARACTER (LEN=2000)                               :: fields
+      REAL, DIMENSION(299)                               :: interp_levels
+      INTEGER                                            :: interp_method=1
+      INTEGER                                            :: extrapolate=0
+      LOGICAL                                            :: debug=.FALSE.
+      LOGICAL                                            :: unstagger_grid=.FALSE.
+      LOGICAL                                            :: bit64=.FALSE.
+      LOGICAL                                            :: oldvar=.TRUE.              
+
+      INTEGER                                            :: funit,ios
+      LOGICAL                                            :: is_used
+
+      !
+      ! NAMELISTS 
+      !
+      NAMELIST /io/ path_to_input, input_name, path_to_output, output_name, &
+                    process, fields, debug, bit64, oldvar
+      NAMELIST /interp_in/ interp_levels, interp_method, extrapolate, unstagger_grid
+ 
+      !
+      ! DEFAULT VALUES for VARIABLES
+      !
+      path_to_input   = './'
+      path_to_output  = './'
+      output_name     = ' '
+      interp_levels   = -99999.
+      process         = 'all'
+      
+
+      !
+      ! READ NAMELIST
+      !
+        DO funit=10,100
+           INQUIRE(unit=funit, opened=is_used)
+           IF (.not. is_used) EXIT
+        END DO
+        OPEN(funit,file='namelist.api',status='old',form='formatted',iostat=ios)
+        IF ( ios /= 0 ) STOP "ERROR opening namelist.api"
+        READ(funit,io)
+        READ(funit,interp_in)
+        CLOSE(funit)
+
+      !!! MAIN CALL
+      CALL api_main ( path_to_input, input_name, path_to_output, output_name, &
+                                 process, fields, debug, bit64, oldvar, &
+                                 interp_levels, interp_method, extrapolate, unstagger_grid, -99999. ) 
+
+ END PROGRAM api
+
+ SUBROUTINE api_main ( path_to_input, input_name, path_to_output, output_name, &
+                       process, fields, debug, bit64, oldvar, &
+                       interp_levels, interp_method, extrapolate, unstagger_grid, onelevel )
+
+      IMPLICIT NONE
+      INCLUDE 'netcdf.inc'
+
       !!
       !! EARTH CONSTANTS
       !! 
@@ -61,8 +125,8 @@
       !
       CHARACTER,         ALLOCATABLE, DIMENSION(:,:,:,:) :: text
       CHARACTER (LEN=31),ALLOCATABLE, DIMENSION(:)       :: dnamei, dnamej
-      CHARACTER(LEN=250),ALLOCATABLE, DIMENSION(:)       :: input_file_names
-      CHARACTER(LEN=250),ALLOCATABLE, DIMENSION(:)       :: output_file_names
+      CHARACTER(LEN=500),ALLOCATABLE, DIMENSION(:)       :: input_file_names
+      CHARACTER(LEN=500),ALLOCATABLE, DIMENSION(:)       :: output_file_names
       DOUBLE PRECISION,  ALLOCATABLE, DIMENSION(:,:,:,:) :: ddata1, ddata2
       REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: data1, data2, data3
       REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: pres_field, pres_out
@@ -78,25 +142,25 @@
       INTEGER,                        DIMENSION(4)       :: start_dims = 1
       INTEGER,                        DIMENSION(4)       :: dims_in, dims_out
       INTEGER,                        DIMENSION(6)       :: ishape, jshape
-      CHARACTER (LEN=80)                                 :: cval
+      CHARACTER (LEN=500)                                :: cval !80
       CHARACTER (LEN=31)                                 :: cname, test_dim_name
-      CHARACTER (LEN=80)                                 :: input_file, output_file, att_text
-      CHARACTER (LEN=250)                                :: path_to_input
-      CHARACTER (LEN=250)                                :: path_to_output
-      CHARACTER (LEN=250)                                :: input_name
-      CHARACTER (LEN=250)                                :: output_name, tmp_name
+      CHARACTER (LEN=500)                                :: input_file, output_file, att_text !80
+      CHARACTER (LEN=500)                                :: path_to_input
+      CHARACTER (LEN=500)                                :: path_to_output
+      CHARACTER (LEN=500)                                :: input_name
+      CHARACTER (LEN=500)                                :: output_name, tmp_name
       CHARACTER (LEN=10)                                 :: option
       CHARACTER (LEN=132)                                :: command
       CHARACTER (LEN=20)                                 :: process, dummy
       CHARACTER (LEN=2000)                               :: fields, process_these_fields
-      REAL, DIMENSION(299)                               :: interp_levels
+      REAL, DIMENSION(299)                               :: interp_levels 
       REAL                                               :: rval
       REAL                                               :: MISSING=1.e36
       REAL                                               :: truelat1, truelat2, stand_lon
       INTEGER                                            :: map_proj
       INTEGER                                            :: LINLOG = 1
-      INTEGER                                            :: interp_method=1
-      INTEGER                                            :: extrapolate=0
+      INTEGER                                            :: interp_method!=1
+      INTEGER                                            :: extrapolate!=0
       INTEGER                                            :: ncid, mcid, rcode
       INTEGER                                            :: idm, ndims, nvars, natt, ngatts
       INTEGER                                            :: nunlimdimid
@@ -110,54 +174,31 @@
       INTEGER                                            :: is_there
       INTEGER                                            :: kk
       LOGICAL                                            :: is_used
-      LOGICAL                                            :: debug=.FALSE.
+      LOGICAL                                            :: debug!=.FALSE.
       LOGICAL                                            :: interpolate=.FALSE.
-      LOGICAL                                            :: unstagger_grid=.FALSE.
+      LOGICAL                                            :: unstagger_grid!=.FALSE.
       LOGICAL                                            :: fix_meta_stag=.FALSE.
-      LOGICAL                                            :: bit64=.FALSE.
+      LOGICAL                                            :: bit64!=.FALSE.
       LOGICAL                                            :: first=.TRUE.
-      LOGICAL                                            :: oldvar=.FALSE.              
+      LOGICAL                                            :: oldvar!=.FALSE.                   
 
-      !
-      ! NAMELISTS 
-      !
-      NAMELIST /io/ path_to_input, input_name, path_to_output, output_name, &
-                    process, fields, debug, bit64, oldvar
-      NAMELIST /interp_in/ interp_levels, interp_method, extrapolate, unstagger_grid
-
-      !
-      ! DEFAULT VALUES for VARIABLES
-      !
-      path_to_input   = './'
-      path_to_output  = './'
-      output_name     = ' '
-      interp_levels   = -99999.
-      process         = 'all'
-
-      !
-      ! READ NAMELIST
-      !
-        DO funit=10,100
-           INQUIRE(unit=funit, opened=is_used)
-           IF (.not. is_used) EXIT
-        END DO
-        OPEN(funit,file='namelist.api',status='old',form='formatted',iostat=ios)
-        IF ( ios /= 0 ) STOP "ERROR opening namelist.api"
-        READ(funit,io)
-        READ(funit,interp_in)
-        CLOSE(funit)
+      REAL :: onelevel
+      if ( onelevel .ne. -99999. ) then
+        interp_levels(1) = onelevel
+        interp_levels(2:) = -99999.
+      endif
 
       !
       ! INPUT FILE NAMES
       !
         lent = len_trim(path_to_input)
-        IF ( path_to_input(lent:lent) /= "/" ) THEN
-           path_to_input = TRIM(path_to_input)//"/"
-        ENDIF
-        lent = len_trim(path_to_output)
-        IF ( path_to_output(lent:lent) /= "/" ) THEN
-           path_to_output = TRIM(path_to_output)//"/"
-        ENDIF
+         !IF ( path_to_input(lent:lent) /= "/" ) THEN
+         !   path_to_input = TRIM(path_to_input)//"/"
+         !ENDIF
+         !lent = len_trim(path_to_output)
+         !IF ( path_to_output(lent:lent) /= "/" ) THEN
+         !   path_to_output = TRIM(path_to_output)//"/"
+         !ENDIF
         input_name = TRIM(path_to_input)//TRIM(input_name)
         !
         ! BUILD a UNIX COMMAND based on "ls" of all of the input files
@@ -525,7 +566,7 @@
         IF ( DEBUG ) PRINT *, 'ROTATE WINDS'
         write(6,*) "  Data will be output on unstaggered grid "
         do kk = 1, times_in_file
-         IF ( DEBUG ) print *, kk
+         !IF ( DEBUG ) print *, kk
          IF (oldvar) THEN
            interm1(1:iweg-1,:,:) = ( u(1:iweg-1,:,:,kk) + u(2:iweg,:,:,kk) ) * .5
            interm2(:,1:isng-1,:) = ( v(:,1:isng-1,:,kk) + v(:,2:isng,:,kk) ) * .5
@@ -672,7 +713,7 @@
                    pres_field(:,:,kk,:) = - data1(:,:,1,:) + phb(:,:,kk,:) / grav
                 ENDDO
                    deallocate (data1)
-                   PRINT *, pres_field(10,10,:,1)
+                   !PRINT *, pres_field(10,10,:,1)
            ENDIF
  
 
@@ -948,7 +989,7 @@ interpolate = .TRUE.
                                       dims_out = 1
                                       DO ii = 1,4
                                         dims_out(ii) = dvalj(jshape(ii))
-                                        print *, dims_out(ii)
+                                        !print *, dims_out(ii)
                                       ENDDO
                                       !!! NB: what follows is useful because we'd like diagnostics for each history timestep
                                       dims_in = dims_out
@@ -1133,7 +1174,8 @@ deallocate(data2)
       write(6,*) " END of API PROGRAM - SUCCESS so far"      
       write(6,*) "##########################################"
 
- END PROGRAM api
+END SUBROUTINE
+! END PROGRAM api
 !---------------------------------------------------------------------
 !---------------------------------------------------------------------
 !---------------------------------------------------------------------
@@ -1572,13 +1614,11 @@ IF ( LINLOG .ge. 0 ) RETURN   !! TEMPORARY: no extrapolation
    real, parameter :: DEG_PER_RAD = 180./PI
    real, parameter :: RAD_PER_DEG = PI/180.
 
-!  print *, 'map ', map_proj
   IF ( map_proj .ge. 3 ) THEN                         ! No need to rotate
     !PRINT *, 'NO NEED TO ROTATE !!!! equivalent to output U,V with unstagger_grid'
     UUUmet(:,:,:) = UUU
     VVVmet(:,:,:) = VVV
   ELSE
-  !END IF
 
   cone = 1.                                          !  PS
   IF ( map_proj .eq. 1) THEN                         !  Lambert Conformal mapping
@@ -1605,9 +1645,6 @@ IF ( LINLOG .ge. 0 ) RETURN   !! TEMPORARY: no extrapolation
   END DO
   END DO
 
-!print *, longi(10,10)
-!print *, lati(10,10)
-
 
   DO i = 1, west_east_dim
   DO j = 1, south_north_dim
@@ -1623,8 +1660,6 @@ IF ( LINLOG .ge. 0 ) RETURN   !! TEMPORARY: no extrapolation
   DO k = 1,bottom_top_dim
     UUUmet(:,:,k) = VVV(:,:,k)*sin(alpha) + UUU(:,:,k)*cos(alpha)
     VVVmet(:,:,k) = VVV(:,:,k)*cos(alpha) - UUU(:,:,k)*sin(alpha)
-!print *,UUU(10,10,k), UUUmet(10,10,k)
-!print *,VVV(10,10,k), VVVmet(10,10,k)
   END DO
   END IF
 
