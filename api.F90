@@ -417,10 +417,10 @@
               dnamej(j) = 'pressure' 
               dvalj(j) = num_metgrid_levels
         ELSE IF ( LINLOG .eq. 3 ) THEN 
-              dnamej(j) = 'bottom_top' !'altitude'
+              dnamej(j) = 'altitude' !'bottom_top' !'altitude'
               dvalj(j) = num_metgrid_levels
         ELSE 
-              dnamej(j) = 'bottom_top' !'altitude_abg'
+              dnamej(j) = 'altitude_abg' !'bottom_top' !'altitude_abg'
               dvalj(j) = num_metgrid_levels
         ENDIF
         rcode = nf_def_dim(mcid, dnamej(j), dvalj(j), j)
@@ -792,8 +792,8 @@
             IF ( test_dim_name == 'bottom_top' .OR. test_dim_name == 'bottom_top_stag' ) THEN
                  IF ( test_dim_name == 'bottom_top_stag' ) fix_meta_stag = .TRUE.
                  IF (LINLOG .le. 2) test_dim_name = 'pressure'
-                 IF (LINLOG .eq. 3) test_dim_name = 'bottom_top' !'altitude' 
-                 IF (LINLOG .eq. 4) test_dim_name = 'bottom_top' !'altitude_abg'
+                 IF (LINLOG .eq. 3) test_dim_name = 'altitude' !'bottom_top' !'altitude' 
+                 IF (LINLOG .eq. 4) test_dim_name = 'altitude_abg' !'bottom_top' !'altitude_abg'
                  interpolate = .TRUE.
             ENDIF
             IF ( unstagger_grid .AND. test_dim_name == 'west_east_stag' )   THEN
@@ -969,8 +969,8 @@ interpolate = .TRUE.
                                         IF ( ii == 1 ) test_dim_name = 'west_east'
                                         IF ( ii == 2 ) test_dim_name = 'south_north'
                                         IF (( ii == 3 ) .and. (LINLOG .le. 2))  test_dim_name = 'pressure'
-                                        IF (( ii == 3 ) .and. (LINLOG .eq. 3))  test_dim_name = 'bottom_top' !'altitude'
-                                        IF (( ii == 3 ) .and. (LINLOG .eq. 4))  test_dim_name = 'bottom_top' !'altitude_abg'
+                                        IF (( ii == 3 ) .and. (LINLOG .eq. 3))  test_dim_name = 'altitude' !'bottom_top' !'altitude'
+                                        IF (( ii == 3 ) .and. (LINLOG .eq. 4))  test_dim_name = 'altitude_abg' !'bottom_top' !'altitude_abg'
                                         IF ( ii == 4 ) test_dim_name = 'Time'
                                         DO jj = 1,j
                                           IF ( test_dim_name == dnamej(jj) ) THEN
