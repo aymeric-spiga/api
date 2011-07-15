@@ -273,7 +273,7 @@
               ENDIF
            ENDIF
         END DO
-        CLOSE ( 112 )
+        CLOSE ( 111 )  !!AS: don't know why but it was written 112... fixed the bug.
         print*, " " 
         !   We clean up our own messes.
         CALL SYSTEM ( '/bin/rm -f .foo'  )
@@ -1164,6 +1164,10 @@ deallocate(data2)
         rcode = nf_close(mcid)
         write(6,*) 
       ENDDO 
+
+      !!!! forgotten in the initial program
+      DEALLOCATE (  input_file_names )
+      DEALLOCATE ( output_file_names )
 
       !
       ! WELL...
