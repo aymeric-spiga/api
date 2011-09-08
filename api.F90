@@ -68,7 +68,7 @@
       path_to_output  = './'
       output_name     = ' '
       interp_levels   = -99999.
-      process         = 'all'
+      process         = 'list' !!'all'
       
 
       !
