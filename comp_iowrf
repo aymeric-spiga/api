@@ -2,5 +2,8 @@
 
 ### iowrf wrfout_d01_2024-03-20_06:00:00 -box x 50 150 y 50 150
 
-pgf90 iowrf.f -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include  -Mfree  -o iowrf
+#pgf90 iowrf.f -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include  -Mfree  -o iowrf
+
+g95 iowrf.f -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -fno-second-underscore -ffree-form -o iowrf
+
 
