@@ -6,8 +6,8 @@
  fields         = 'tk,W,uvmet'                     !! a list of fields to interpolate
                                                    !! - either fields in wrfout*
                                                    !! - or tk for temperature 
-                                                           uvmet for meteorological winds
-                                                           tpot for potential temperature
+                                                   !!      uvmet for meteorological winds
+                                                   !!      tpot for potential temperature
  debug          = .TRUE.                           !! [add this if you want more information on screen]
 /
 
