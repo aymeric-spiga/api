@@ -1618,7 +1618,7 @@ IF ( LINLOG .ge. 0 ) RETURN   !! TEMPORARY: no extrapolation
    real, parameter :: DEG_PER_RAD = 180./PI
    real, parameter :: RAD_PER_DEG = PI/180.
 
-  IF ( map_proj .ge. 3 ) THEN                         ! No need to rotate
+  IF (( map_proj .ge. 3 ) .OR. ( map_proj .eq. 0 )) THEN                         ! No need to rotate
     !PRINT *, 'NO NEED TO ROTATE !!!! equivalent to output U,V with unstagger_grid'
     UUUmet(:,:,:) = UUU
     VVVmet(:,:,:) = VVV

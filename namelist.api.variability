@@ -1,0 +1,42 @@
+&io
+!!!!!
+ path_to_input  = './liens/OMEGA_CRATERS_ca/'
+! path_to_input  = './liens/OMEGA_CRATERS_nca/'
+ input_name     = 'wrfout_d03*'
+!!!!!
+! path_to_input  = './liens/MERIDIANI/saves_simu_LS_244_tau05/'
+! path_to_input  = './liens/MERIDIANI/saves_simu_LS_244_tau1/'
+! path_to_input  = './liens/MERIDIANI/saves_simu_LS_244_tau2/'
+! path_to_input  = './liens/MERIDIANI/saves_simu_LS_244_tau5/'
+! input_name     = 'wrfout_d01_2024-09-08_00:00:00'
+!!!!!
+ path_to_output = './' 
+ oldvar         = T
+ process        = 'list'         
+ fields         = 'HGT,uvmet,tk,W'  
+ debug          = .TRUE.
+/
+
+&interp_in
+ interp_method = 3                 !! INTERPOLATION: ALTITUDE ABOVE MOLA AREOID (km)
+ interp_levels =  -2.000,-1.000, 0.010,
+                   1.000, 2.000, 3.000, 4.000, 5.000, 6.000, 7.000, 8.000, 9.000,10.000,
+                  11.000,12.000,13.000,14.000,15.000,16.000,17.000,18.000,19.000,20.000,
+                  21.000,22.000,23.000,24.000,25.000,26.000,27.000,28.000,29.000,30.000,
+/
+ interp_method = 4                 !! INTERPOLATION: ALTITUDE ABOVE SURFACE (km)
+ interp_levels =  0.01, 0.02, 0.05, 0.1,
+                        0.2, 0.4, 0.6, 0.8,
+                  1.0,  1.2, 1.4, 1.6, 1.8,
+                  2.0,  2.5, 
+                  3.0,  3.5,
+                  4.0,  4.5,
+                  5.0,  5.5,
+                  6.0,  6.5,
+                  7.0,  7.5,
+                  8.0,  8.5,
+                  9.0,  9.5,
+                 10.0, 10.5,
+                 11.0, 11.5,
+                 12.0, 12.5,
+/
