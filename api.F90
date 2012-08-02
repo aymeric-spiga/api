@@ -462,7 +462,7 @@
                          ilen, ival)
              ENDIF
             IF (cname .eq. 'MAP_PROJ') map_proj = ival 
-           elseif ( itype .eq. 5 ) then    ! real
+           elseif ( itype .eq. 5 .or. itype .eq. 6 ) then    ! real !AC: 6 is float
             rcode = nf_get_att_real (ncid, nf_global, cname, rval)
             IF (debug) &
                write(6,'("     i = ",i2," : ",A," = ",G18.10E2)') &
