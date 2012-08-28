@@ -43,7 +43,7 @@
       CHARACTER (LEN=500)                                :: output_name
       CHARACTER (LEN=20)                                 :: process
       CHARACTER (LEN=2000)                               :: fields
-      REAL, DIMENSION(299)                               :: interp_levels
+      REAL, DIMENSION(1000)                               :: interp_levels
       INTEGER                                            :: interp_method=1
       INTEGER                                            :: extrapolate=0
       LOGICAL                                            :: debug=.FALSE.
@@ -153,7 +153,7 @@
       CHARACTER (LEN=132)                                :: command
       CHARACTER (LEN=20)                                 :: process, dummy
       CHARACTER (LEN=2000)                               :: fields, process_these_fields
-      REAL, DIMENSION(299)                               :: interp_levels 
+      REAL, DIMENSION(1000)                               :: interp_levels 
       REAL                                               :: rval
       REAL                                               :: MISSING=1.e36
       REAL                                               :: truelat1, truelat2, stand_lon
