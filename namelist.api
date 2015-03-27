@@ -1,9 +1,9 @@
 &io
  path_to_input  = './'                             !! where input wrfout* files are located
  path_to_output = './'                             !! where output API files will be located
- input_name     = 'wrfout_d01_9999-09-09_09:00:00' !! input file to API (could be wrfout*)
+ input_name     = 'wrfout_d0?_????-??-??_??:??:??' !! input file to API (could be wrfout*)
  process        = 'list'                           !! [do not modify]     
- fields         = 'tk,W,uvmet'                     !! a list of fields to interpolate
+ fields         = 'HGT,TSURF,tk,W,uvmet'           !! a list of fields to interpolate
                                                    !! - either fields in wrfout*
                                                    !! - or tk for temperature 
                                                    !!      uvmet for meteorological winds
@@ -12,6 +12,7 @@
 /
 
 &interp_in
+ unstagger_grid = .TRUE.           !! MANDATORY for POLAR PROJECTIONS
  interp_method = 4                 !! 1 --> INTERPOLATION: PRESSURE [LINEAR in p]         output: wrfout*_p
                                    !! 2 --> INTERPOLATION: PRESSURE [LINEAR in log(p)]    output: wrfout*_p
                                    !! 3 --> INTERPOLATION: ALTITUDE ABOVE MOLA AREOID     output: wrfout*_z
