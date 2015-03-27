@@ -131,7 +131,7 @@
       REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: data1, data2, data3
       REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: pres_field, pres_out
       REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: pres_stagU, pres_stagV
-      REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: ght, phb, qv, tk, rh, tpot, u, v, umet, vmet 
+      REAL,              ALLOCATABLE, DIMENSION(:,:,:,:) :: ght, phb, qv, tk, rh, tpot, u, v, umet, vmet, wind 
       REAL,              ALLOCATABLE, DIMENSION(:,:,:)   :: psfc
       REAL,              ALLOCATABLE, DIMENSION(:,:)     :: ter
       REAL,              ALLOCATABLE, DIMENSION(:,:)     :: longi, lati
@@ -559,6 +559,8 @@
            allocate (umet   (iweg-1, isng-1, ibtg-1, times_in_file ))
         IF (ALLOCATED(vmet))    deallocate(vmet)
            allocate (vmet   (iweg-1, isng-1, ibtg-1, times_in_file ))
+        IF (ALLOCATED(wind))    deallocate(wind)
+           allocate (wind   (iweg-1, isng-1, ibtg-1, times_in_file ))
         IF (ALLOCATED(interm1)) deallocate(interm1)
            allocate (interm1(iweg-1, isng-1, ibtg-1 ))
         IF (ALLOCATED(interm2)) deallocate(interm2)
@@ -577,6 +579,7 @@
          if (unstagger_grid) map_proj=3 !!! AS: unstagger_grid=T makes the program to put unstaggered U and V in uvmet 
          CALL calc_uvmet( interm1, interm2, umet(:,:,:,kk), vmet(:,:,:,kk),  &
                     truelat1, truelat2, stand_lon, map_proj, longi, lati, iweg-1, isng-1, ibtg-1 )
+         wind(:,:,:,kk) = sqrt((umet(:,:,:,kk)**2) + (vmet(:,:,:,kk)**2))
         enddo
         deallocate(lati)
         deallocate(longi)
@@ -1060,6 +1063,21 @@ interpolate = .TRUE.
            rcode = nf_put_vara_real (mcid, jvar, start_dims, dims_out, data2)
            IF (debug) write(6,*) '     SAMPLE VALUE OUT=',data2(dims_out(1)/2,dims_out(2)/2,1,1)
            deallocate(data2)
+
+           jvar = jvar + 1
+           CALL def_var (mcid, jvar, "wind  ", 5, 4, jshape, "XZY", "wind speed     ", "K ", "-", "XLONG XLAT", MISSING)
+           IF (debug) THEN
+             write(6,*) 'VAR: wind'
+             write(6,*) '     DIMS OUT: ',dims_out
+           ENDIF
+           allocate (data2(dims_out(1),dims_out(2),dims_out(3),dims_out(4)))
+           CALL interp (data2, wind, pres_field, interp_levels, psfc, ter, tk, qv,  &
+                          iweg-1, isng-1, ibtg-1, dims_in(4), &
+                          num_metgrid_levels, LINLOG, extrapolate, .FALSE., MISSING)
+           rcode = nf_put_vara_real (mcid, jvar, start_dims, dims_out, data2)
+           IF (debug) write(6,*) '     SAMPLE VALUE OUT=',data2(dims_out(1)/2,dims_out(2)/2,1,1)
+           deallocate(data2)
+
         ENDIF
 
         !
