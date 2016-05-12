@@ -1,16 +1,16 @@
 #! /bin/bash
 
-#
-# NETCDF should be defined
-#
+##########################
+# NETCDF must be defined #
+##########################
 echo $NETCDF
 
 #pgf90 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Mfree -o api
-
+#pgf90 -mcmodel=medium -Mlarge_arrays api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Mfree -o p_interp
 
 #g95 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -fno-second-underscore -ffree-form -o api
 #g95 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -ffree-form -o api
-#pgf90 -mcmodel=medium -Mlarge_arrays api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Mfree -o p_interp
+
 ifort api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -o api
 
 
