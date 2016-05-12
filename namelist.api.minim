@@ -1,9 +1,0 @@
-&io
- input_name     = 'POLAR_THOMAS_ls10.17656/wrfout_d03_2024-01-19_06:00:00'
- fields         = 'HGT,uvmet,tk,HFX,USTM'  
-/
-
-&interp_in
- interp_method = 4                 
- interp_levels = 0.01, 0.10 
-/
