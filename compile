@@ -13,6 +13,8 @@ echo $NETCDF
 
 ifort api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -o api
 
+#gfortran api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -fno-second-underscore -ffree-form -o api
+
 
 
 #!=================================Make Executable============================
