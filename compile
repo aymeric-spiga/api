@@ -11,7 +11,7 @@ echo $NETCDF
 #g95 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -fno-second-underscore -ffree-form -o api
 #g95 api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -Wall -Wno=112,141,137,155 -ffree-form -o api
 
-ifort api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -o api
+ifort api.F90 -L$NETCDF/lib -lnetcdf -lnetcdff -lm -I$NETCDF/include -o api
 
 #gfortran api.F90 -L$NETCDF/lib -lnetcdf -lm -I$NETCDF/include -fno-second-underscore -ffree-form -o api
 
